@@ -1,19 +1,17 @@
 import React, { useState } from "react";
 import axios from "axios";
-import '../index.css';
+import "../index.css";
 
 const Newsletter = () => {
   const [email, setEmail] = useState();
 
-  async function postemail(event) {
-    event.preventDefault();
-    axios.post("https://apihousebackend.herokuapp.com/blog/newsletter/", {
-      email: email,
-    });
-  }
+  axios.post("https://apihousebackend.herokuapp.com/blog/newsletter/", {
+    email: email,
+  });
+
   return (
     <>
-      <form class="w-50 mx-auto" onSubmit={postemail}>
+      <form class="w-50 mx-auto" onSubmit={Newsletter}>
         <div class="col ">
           <div class="form-outline form-white mb-4">
             <input
