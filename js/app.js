@@ -347,6 +347,26 @@ let runToken = 0;
 let lastErrorMessage = "";
 
 
+/*
+Reduces an error message to something safe to report.
+
+Several messages quote the input back at you — JSON.parse in
+particular answers with `Unexpected token 'e', "eyJhbGciOi"...
+is not valid JSON`. That fragment can be half a JWT, so every
+quoted span is replaced before the label leaves the page. The
+user still sees the full message on screen; only the analytics
+event is stripped.
+*/
+function errorLabel(message) {
+
+  return String(message)
+    .replace(/"[^"]*"|'[^']*'|`[^`]*`/g, "…")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 90);
+}
+
+
 function scheduleRun() {
 
   clearTimeout(runTimer);
@@ -389,7 +409,7 @@ async function run(options) {
 
       lastErrorMessage = error.message;
 
-      track("tool_error", { tool_id: currentTool.id, error_message: error.message.slice(0, 100) });
+      track("tool_error", { tool_id: currentTool.id, error_message: errorLabel(error.message) });
     }
   }
 }

@@ -17,7 +17,7 @@ Rules this file enforces:
 
 (function () {
 
-  const MEASUREMENT_ID = "";
+  const MEASUREMENT_ID = "G-ZDGNYWCW6T";
 
   const optedOut =
     navigator.doNotTrack === "1" ||

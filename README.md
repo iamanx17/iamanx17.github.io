@@ -79,7 +79,11 @@ While it is empty nothing is loaded and no requests are made.
 
 Events sent: `page_view` (automatic), `tool_opened`, `generate`,
 `copy_clicked`, `tool_error`. Parameters are limited to the tool id, its
-category and a truncated error message — **never the content a user pastes**.
+category and a sanitised error label — **never the content a user pastes**.
+Some runtime errors quote the input back (JSON.parse answers with a fragment of
+what you pasted), so `errorLabel()` in `js/app.js` strips every quoted span
+before the event is sent. If you add a tool whose errors embed user data in some
+other shape, extend that function.
 Advertising signals are off, IPs are anonymised, and the script is not loaded at
 all when the browser sends Do Not Track or Global Privacy Control.
 
