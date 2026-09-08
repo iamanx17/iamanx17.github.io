@@ -77,32 +77,6 @@ Tools.add({
 
     if (!v.url.trim()) return { note: "Enter a URL." };
 
-<<<<<<< HEAD
-    const data = {
-      url: v.url.trim(),
-      method: v.method,
-      headers: parseHeaderLines(v.headers),
-      body: v.body.trim() ? v.body.trim() : null,
-      form: [],
-      auth: null
-    };
-
-    if (v.format === "fetch") return genFetch(data);
-    if (v.format === "axios") return genAxios(data);
-    if (v.format === "python") return genPython(data);
-
-    const parts = ["curl -X " + data.method + " " + shellQuote(data.url)];
-
-    for (const [k, val] of Object.entries(data.headers)) {
-      parts.push("  -H " + shellQuote(k + ": " + val));
-    }
-
-    if (data.body !== null) {
-      parts.push("  -d " + shellQuote(data.body));
-    }
-
-    return parts.join(" \\\n");
-=======
     const headers = parseHeaderLines(v.headers);
     const body = v.body.trim() ? v.body.trim() : null;
 
@@ -124,7 +98,6 @@ Tools.add({
     if (v.format === "python") return genPython(parseCurl(curl));
 
     return curl;
->>>>>>> f3ae358 (Rebuild curl2code as a static multi-page site)
   }
 });
 
