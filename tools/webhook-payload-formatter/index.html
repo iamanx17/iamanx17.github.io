@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b0d12">
+  <title>Webhook Payload Formatter and Inspector | curl2code</title>
+  <meta name="description" content="Pretty-print a webhook payload and pull out the event type, id and timestamp fields used by Stripe, GitHub, Shopify and similar providers.">
+  <link rel="canonical" href="https://curl2code.xyz/tools/webhook-payload-formatter/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="curl2code">
+  <meta property="og:title" content="Webhook Payload Formatter and Inspector | curl2code">
+  <meta property="og:description" content="Pretty-print a webhook payload and pull out the event type, id and timestamp fields used by Stripe, GitHub, Shopify and similar providers.">
+  <meta property="og:url" content="https://curl2code.xyz/tools/webhook-payload-formatter/">
+  <meta property="og:image" content="https://curl2code.xyz/assets/img/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Webhook Payload Formatter and Inspector | curl2code">
+  <meta name="twitter:description" content="Pretty-print a webhook payload and pull out the event type, id and timestamp fields used by Stripe, GitHub, Shopify and similar providers.">
+  <meta name="twitter:image" content="https://curl2code.xyz/assets/img/og.png">
+
+  <link rel="stylesheet" href="../../assets/css/site.css">
+  <link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../assets/img/icon-180.png">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Webhook payload formatter","url":"https://curl2code.xyz/tools/webhook-payload-formatter/","applicationCategory":"DeveloperApplication","operatingSystem":"Any browser","description":"Pretty-print a webhook payload and pull out the event type, id and timestamp fields used by Stripe, GitHub, Shopify and similar providers.","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://curl2code.xyz/"},{"@type":"ListItem","position":2,"name":"Tools","item":"https://curl2code.xyz/tools/"},{"@type":"ListItem","position":3,"name":"Webhook Payload Formatter","item":"https://curl2code.xyz/tools/webhook-payload-formatter/"}]}</script>
+  <script src="../../js/analytics.js"></script>
+</head>
+<body class="tool-page">
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="wrap">
+
+      <a class="brand" href="../../">
+        <span class="brand-mark">c2</span>
+        <span class="brand-name">curl<span>2code</span></span>
+      </a>
+
+      <button id="navToggle" class="nav-toggle" aria-expanded="false" aria-controls="siteNav" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+
+      <nav id="siteNav" class="site-nav" aria-label="Main">
+        <a href="../../">Home</a>
+        <a href="../../tools/" aria-current="page">Tools</a>
+        <a href="../../tools/curl-to-code/">cURL → Code</a>
+        <a href="../../about/">About</a>
+      </nav>
+
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Breadcrumb">
+        <a href="../../">Home</a>
+        <span aria-hidden="true">/</span>
+        <a href="../">Tools</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">Webhook Payload Formatter</span>
+      </nav>
+      <header class="page-head">
+        <p class="eyebrow">Webhooks</p>
+        <h1>Webhook payload formatter</h1>
+        <p class="lead">Paste a webhook body to read it properly, with the event type, id and timestamp fields lifted out of the payload.</p>
+      </header>
+      <div class="tool-app">
+
+        <div class="grid">
+
+          <section class="panel">
+            <div class="panel-header">
+              <h2 class="panel-title">Input</h2>
+              <button id="exampleBtn" class="ghost" type="button" hidden>Load example</button>
+            </div>
+            <div id="input-fields"></div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-header">
+              <h2 class="panel-title" id="output-label">Output</h2>
+              <button id="copyBtn" class="ghost" type="button">Copy</button>
+            </div>
+            <div id="output"><div class="placeholder">Loading the tool…</div></div>
+          </section>
+
+        </div>
+
+        <div class="actions">
+          <button id="runBtn" class="primary" type="button">Run</button>
+          <button id="copyBtn2" type="button">Copy output</button>
+          <button id="clearBtn" type="button">Clear</button>
+          <span class="actions-note">Runs in your browser. <kbd>⌘</kbd>/<kbd>Ctrl</kbd> + <kbd>Enter</kbd> to run.</span>
+        </div>
+
+      </div>
+      <!-- ad slot: below-tool — see README before enabling -->
+      <aside class="ad-slot" data-slot="below-tool" aria-hidden="true"></aside>
+      <div class="prose">
+        <section>
+          <h2>What to check in a webhook payload</h2>
+<ul class="doc-list">
+  <li><strong>The event id.</strong> Providers retry, so the same event can arrive more than once. Store the id and ignore repeats — delivery is at-least-once, never exactly-once.</li>
+  <li><strong>The timestamp.</strong> Events can arrive out of order. If the payload describes a state, compare timestamps before overwriting newer data with older.</li>
+  <li><strong>The event type.</strong> Providers add new types over time; an unknown type should be logged and acknowledged, not treated as an error.</li>
+</ul>
+<p>
+  Verify the signature before trusting any of it — see the
+  <a href="/tools/webhook-signature-generator/">signature generator</a>.
+</p>
+        </section>
+      </div>
+      <section class="related">
+        <h2>Related tools</h2>
+        <ul class="card-list">
+        <li><a href="../webhook-signature-generator/"><strong>Webhook Signature Generator</strong><span>Build a provider-style webhook signature header from a payload and secret.</span></a></li>
+        <li><a href="../hmac-generator/"><strong>HMAC Generator</strong><span>Compute an HMAC digest of any message with any supported hash.</span></a></li>
+        <li><a href="../webhook-tester/"><strong>Webhook Tester</strong><span>Send a signed test webhook from your browser and read the response.</span></a></li>
+        <li><a href="../curl-to-code/"><strong>cURL → Code Converter</strong><span>Convert a cURL command into runnable code in nine languages.</span></a></li>
+        </ul>
+        <p class="related-all"><a href="../">Browse all 25 tools →</a></p>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+
+      <nav class="footer-links" aria-label="Footer">
+        <a href="../../tools/">All tools</a>
+        <a href="../../about/">About</a>
+        <a href="../../contact/">Contact</a>
+        <a href="../../privacy/">Privacy</a>
+        <a href="../../terms/">Terms</a>
+      </nav>
+
+      <p class="footer-note">
+        Every tool on curl2code runs entirely in your browser. Commands, tokens and
+        payloads you paste are never uploaded to a server.
+      </p>
+
+      <p class="footer-copy">&copy; 2026 curl2code</p>
+
+    </div>
+  </footer>
+
+  <div id="toast" role="status" aria-live="polite"></div>
+
+  <script>window.TOOL = {"id":"webhook-formatter"};</script>
+  <script src="../../js/site.js"></script>
+  <script src="../../js/app.js"></script>
+  <script src="../../js/webhooks.js"></script>
+</body>
+</html>

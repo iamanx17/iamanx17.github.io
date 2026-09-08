@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b0d12">
+  <title>All Developer Tools — cURL, JSON, JWT, HTTP | curl2code</title>
+  <meta name="description" content="A directory of 25 free developer tools: cURL to code conversion, JSON formatting and type generation, JWT decoding, encoding helpers, webhook utilities and more.">
+  <link rel="canonical" href="https://curl2code.xyz/tools/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="curl2code">
+  <meta property="og:title" content="All Developer Tools — cURL, JSON, JWT, HTTP | curl2code">
+  <meta property="og:description" content="A directory of 25 free developer tools: cURL to code conversion, JSON formatting and type generation, JWT decoding, encoding helpers, webhook utilities and more.">
+  <meta property="og:url" content="https://curl2code.xyz/tools/">
+  <meta property="og:image" content="https://curl2code.xyz/assets/img/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="All Developer Tools — cURL, JSON, JWT, HTTP | curl2code">
+  <meta name="twitter:description" content="A directory of 25 free developer tools: cURL to code conversion, JSON formatting and type generation, JWT decoding, encoding helpers, webhook utilities and more.">
+  <meta name="twitter:image" content="https://curl2code.xyz/assets/img/og.png">
+
+  <link rel="stylesheet" href="../assets/css/site.css">
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../assets/img/icon-180.png">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://curl2code.xyz/"},{"@type":"ListItem","position":2,"name":"Tools","item":"https://curl2code.xyz/tools/"}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","name":"curl2code developer tools","itemListElement":[{"@type":"ListItem","position":1,"name":"cURL → Code Converter","url":"https://curl2code.xyz/tools/curl-to-code/"},{"@type":"ListItem","position":2,"name":"cURL → JavaScript","url":"https://curl2code.xyz/tools/curl-to-javascript/"},{"@type":"ListItem","position":3,"name":"cURL → Python","url":"https://curl2code.xyz/tools/curl-to-python/"},{"@type":"ListItem","position":4,"name":"cURL → Node.js","url":"https://curl2code.xyz/tools/curl-to-nodejs/"},{"@type":"ListItem","position":5,"name":"cURL → Axios","url":"https://curl2code.xyz/tools/curl-to-axios/"},{"@type":"ListItem","position":6,"name":"cURL → Go","url":"https://curl2code.xyz/tools/curl-to-go/"},{"@type":"ListItem","position":7,"name":"cURL → Java","url":"https://curl2code.xyz/tools/curl-to-java/"},{"@type":"ListItem","position":8,"name":"cURL → PHP","url":"https://curl2code.xyz/tools/curl-to-php/"},{"@type":"ListItem","position":9,"name":"cURL → C#","url":"https://curl2code.xyz/tools/curl-to-csharp/"},{"@type":"ListItem","position":10,"name":"cURL → Ruby","url":"https://curl2code.xyz/tools/curl-to-ruby/"},{"@type":"ListItem","position":11,"name":"JSON Formatter","url":"https://curl2code.xyz/tools/json-formatter/"},{"@type":"ListItem","position":12,"name":"JSON Validator","url":"https://curl2code.xyz/tools/json-validator/"},{"@type":"ListItem","position":13,"name":"JSON Diff","url":"https://curl2code.xyz/tools/json-diff/"},{"@type":"ListItem","position":14,"name":"JSON → TypeScript","url":"https://curl2code.xyz/tools/json-to-typescript/"},{"@type":"ListItem","position":15,"name":"JSON → Zod","url":"https://curl2code.xyz/tools/json-to-zod/"},{"@type":"ListItem","position":16,"name":"JSON → Pydantic","url":"https://curl2code.xyz/tools/json-to-pydantic/"},{"@type":"ListItem","position":17,"name":"JWT Decoder","url":"https://curl2code.xyz/tools/jwt-decoder/"},{"@type":"ListItem","position":18,"name":"JWT Expiry Checker","url":"https://curl2code.xyz/tools/jwt-expiry-checker/"},{"@type":"ListItem","position":19,"name":"Base64 Encoder / Decoder","url":"https://curl2code.xyz/tools/base64-encoder-decoder/"},{"@type":"ListItem","position":20,"name":"URL Encoder / Decoder","url":"https://curl2code.xyz/tools/url-encoder-decoder/"},{"@type":"ListItem","position":21,"name":"Basic Auth Generator","url":"https://curl2code.xyz/tools/basic-auth-generator/"},{"@type":"ListItem","position":22,"name":"HTTP Request Builder","url":"https://curl2code.xyz/tools/http-request-builder/"},{"@type":"ListItem","position":23,"name":"HTTP Status Lookup","url":"https://curl2code.xyz/tools/http-status-codes/"},{"@type":"ListItem","position":24,"name":"HTTP Header Parser","url":"https://curl2code.xyz/tools/http-header-parser/"},{"@type":"ListItem","position":25,"name":"URL Parser","url":"https://curl2code.xyz/tools/url-parser/"},{"@type":"ListItem","position":26,"name":"Query String Parser","url":"https://curl2code.xyz/tools/query-string-parser/"},{"@type":"ListItem","position":27,"name":"HTTP Response Formatter","url":"https://curl2code.xyz/tools/http-response-formatter/"},{"@type":"ListItem","position":28,"name":"Webhook Payload Formatter","url":"https://curl2code.xyz/tools/webhook-payload-formatter/"},{"@type":"ListItem","position":29,"name":"Webhook Signature Generator","url":"https://curl2code.xyz/tools/webhook-signature-generator/"},{"@type":"ListItem","position":30,"name":"HMAC Generator","url":"https://curl2code.xyz/tools/hmac-generator/"},{"@type":"ListItem","position":31,"name":"Webhook Tester","url":"https://curl2code.xyz/tools/webhook-tester/"},{"@type":"ListItem","position":32,"name":"UUID Generator","url":"https://curl2code.xyz/tools/uuid-generator/"},{"@type":"ListItem","position":33,"name":"Regex Tester","url":"https://curl2code.xyz/tools/regex-tester/"},{"@type":"ListItem","position":34,"name":"Unix Timestamp Converter","url":"https://curl2code.xyz/tools/timestamp-converter/"}]}</script>
+  <script src="../js/analytics.js"></script>
+</head>
+<body>
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="wrap">
+
+      <a class="brand" href="../">
+        <span class="brand-mark">c2</span>
+        <span class="brand-name">curl<span>2code</span></span>
+      </a>
+
+      <button id="navToggle" class="nav-toggle" aria-expanded="false" aria-controls="siteNav" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+
+      <nav id="siteNav" class="site-nav" aria-label="Main">
+        <a href="../">Home</a>
+        <a href="../tools/" aria-current="page">Tools</a>
+        <a href="../tools/curl-to-code/">cURL → Code</a>
+        <a href="../about/">About</a>
+      </nav>
+
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="wrap">
+
+      <header class="page-head">
+        <p class="eyebrow">Directory</p>
+        <h1>All developer tools</h1>
+        <p class="lead">
+          25 free tools for working with HTTP APIs. Each one runs in your
+          browser — no account, no upload, no limit. The cURL converter has a page
+          per target language.
+        </p>
+      </header>
+
+      <div class="filter-wrap">
+        <label class="visually-hidden" for="toolFilter">Filter tools</label>
+        <input id="toolFilter" type="search" placeholder="Filter tools — try “json” or “jwt”" autocomplete="off">
+      </div>
+
+      <p id="toolFilterEmpty" class="empty-note" hidden>No tools match that filter.</p>
+
+      <section class="tool-group" data-tool-group>
+        <h2 id="curl">cURL</h2>
+        <p class="group-blurb">Turn a request you already have into code you can run.</p>
+        <ul class="card-list">
+          <li data-tool-card="curl → code converter convert a curl command into runnable code in nine languages. curl to code converter">
+            <a href="curl-to-code/">
+              <strong>cURL → Code Converter</strong>
+              <span>Convert a cURL command into runnable code in nine languages.</span>
+            </a>
+          </li>
+          <li data-tool-card="curl → javascript browser-ready fetch() with async/await and a status check. curl to javascript (fetch) converter">
+            <a href="curl-to-javascript/">
+              <strong>cURL → JavaScript</strong>
+              <span>Browser-ready fetch() with async/await and a status check.</span>
+            </a>
+          </li>
+          <li data-tool-card="curl → python python 3 script using requests, with a timeout and raise_for_status(). curl to python (requests) converter">
+            <a href="curl-to-python/">
+              <strong>cURL → Python</strong>
+              <span>Python 3 script using requests, with a timeout and raise_for_status().</span>
+            </a>
+          </li>
+          <li data-tool-card="curl → node.js node 18+ script using the built-in global fetch — no packages. curl to node.js converter">
+            <a href="curl-to-nodejs/">
+              <strong>cURL → Node.js</strong>
+              <span>Node 18+ script using the built-in global fetch — no packages.</span>
+            </a>
+          </li>
+          <li data-tool-card="curl → axios axios request config for node or the browser, with try/catch. curl to axios converter">
+            <a href="curl-to-axios/">
+              <strong>cURL → Axios</strong>
+              <span>Axios request config for Node or the browser, with try/catch.</span>
+            </a>
+          </li>
+          <li data-tool-card="curl → go idiomatic net/http with a client timeout and deferred body close. curl to go converter">
+            <a href="curl-to-go/">
+              <strong>cURL → Go</strong>
+              <span>Idiomatic net/http with a client timeout and deferred body close.</span>
+            </a>
+          </li>
+          <li data-tool-card="curl → java jdk 11+ java.net.http httpclient with no external dependencies. curl to java converter">
+            <a href="curl-to-java/">
+              <strong>cURL → Java</strong>
+              <span>JDK 11+ java.net.http HttpClient with no external dependencies.</span>
+            </a>
+          </li>
+          <li data-tool-card="curl → php php using the built-in curl extension, closest to the original command. curl to php converter">
+            <a href="curl-to-php/">
+              <strong>cURL → PHP</strong>
+              <span>PHP using the built-in cURL extension, closest to the original command.</span>
+            </a>
+          </li>
+          <li data-tool-card="curl → c# c# httpclient with an async main and a status check. curl to c# converter">
+            <a href="curl-to-csharp/">
+              <strong>cURL → C#</strong>
+              <span>C# HttpClient with an async Main and a status check.</span>
+            </a>
+          </li>
+          <li data-tool-card="curl → ruby ruby standard library net::http, tls aware. curl to ruby converter">
+            <a href="curl-to-ruby/">
+              <strong>cURL → Ruby</strong>
+              <span>Ruby standard library Net::HTTP, TLS aware.</span>
+            </a>
+          </li>
+        </ul>
+      </section>
+
+      <section class="tool-group" data-tool-group>
+        <h2 id="json">JSON</h2>
+        <p class="group-blurb">Read, check, compare and generate types from JSON payloads.</p>
+        <ul class="card-list">
+          <li data-tool-card="json formatter pretty-print or minify json, with optional key sorting. json formatter">
+            <a href="json-formatter/">
+              <strong>JSON Formatter</strong>
+              <span>Pretty-print or minify JSON, with optional key sorting.</span>
+            </a>
+          </li>
+          <li data-tool-card="json validator check whether json is valid and see exactly where it breaks. json validator">
+            <a href="json-validator/">
+              <strong>JSON Validator</strong>
+              <span>Check whether JSON is valid and see exactly where it breaks.</span>
+            </a>
+          </li>
+          <li data-tool-card="json diff compare two json documents key by key. json diff">
+            <a href="json-diff/">
+              <strong>JSON Diff</strong>
+              <span>Compare two JSON documents key by key.</span>
+            </a>
+          </li>
+          <li data-tool-card="json → typescript generate typescript interfaces from a json sample. json to typescript converter">
+            <a href="json-to-typescript/">
+              <strong>JSON → TypeScript</strong>
+              <span>Generate TypeScript interfaces from a JSON sample.</span>
+            </a>
+          </li>
+          <li data-tool-card="json → zod generate a zod schema from a json sample. json to zod schema generator">
+            <a href="json-to-zod/">
+              <strong>JSON → Zod</strong>
+              <span>Generate a Zod schema from a JSON sample.</span>
+            </a>
+          </li>
+          <li data-tool-card="json → pydantic generate pydantic v2 models from a json sample. json to pydantic model generator">
+            <a href="json-to-pydantic/">
+              <strong>JSON → Pydantic</strong>
+              <span>Generate Pydantic v2 models from a JSON sample.</span>
+            </a>
+          </li>
+        </ul>
+      </section>
+
+      <section class="tool-group" data-tool-group>
+        <h2 id="auth">Auth</h2>
+        <p class="group-blurb">Tokens, encodings and headers — decoded without leaving the page.</p>
+        <ul class="card-list">
+          <li data-tool-card="jwt decoder decode the header and payload of a json web token. jwt decoder">
+            <a href="jwt-decoder/">
+              <strong>JWT Decoder</strong>
+              <span>Decode the header and payload of a JSON Web Token.</span>
+            </a>
+          </li>
+          <li data-tool-card="jwt expiry checker see whether a jwt is expired, not yet valid, or still good. jwt expiry checker">
+            <a href="jwt-expiry-checker/">
+              <strong>JWT Expiry Checker</strong>
+              <span>See whether a JWT is expired, not yet valid, or still good.</span>
+            </a>
+          </li>
+          <li data-tool-card="base64 encoder / decoder encode or decode base64 and base64url, unicode-safe. base64 encoder and decoder">
+            <a href="base64-encoder-decoder/">
+              <strong>Base64 Encoder / Decoder</strong>
+              <span>Encode or decode Base64 and Base64URL, Unicode-safe.</span>
+            </a>
+          </li>
+          <li data-tool-card="url encoder / decoder percent-encode or decode text for use in urls. url encoder and decoder">
+            <a href="url-encoder-decoder/">
+              <strong>URL Encoder / Decoder</strong>
+              <span>Percent-encode or decode text for use in URLs.</span>
+            </a>
+          </li>
+          <li data-tool-card="basic auth generator build or read back an http basic authorization header. basic auth header generator">
+            <a href="basic-auth-generator/">
+              <strong>Basic Auth Generator</strong>
+              <span>Build or read back an HTTP Basic Authorization header.</span>
+            </a>
+          </li>
+        </ul>
+      </section>
+
+      <section class="tool-group" data-tool-group>
+        <h2 id="api">API</h2>
+        <p class="group-blurb">Compose, inspect and understand HTTP requests and responses.</p>
+        <ul class="card-list">
+          <li data-tool-card="http request builder build a request from parts and export it as curl or code. http request builder">
+            <a href="http-request-builder/">
+              <strong>HTTP Request Builder</strong>
+              <span>Build a request from parts and export it as cURL or code.</span>
+            </a>
+          </li>
+          <li data-tool-card="http status lookup look up an http status code by number or keyword. http status code lookup">
+            <a href="http-status-codes/">
+              <strong>HTTP Status Lookup</strong>
+              <span>Look up an HTTP status code by number or keyword.</span>
+            </a>
+          </li>
+          <li data-tool-card="http header parser turn a raw header block into a table and a json object. http header parser">
+            <a href="http-header-parser/">
+              <strong>HTTP Header Parser</strong>
+              <span>Turn a raw header block into a table and a JSON object.</span>
+            </a>
+          </li>
+          <li data-tool-card="url parser break a url into its parts and list its query parameters. url parser">
+            <a href="url-parser/">
+              <strong>URL Parser</strong>
+              <span>Break a URL into its parts and list its query parameters.</span>
+            </a>
+          </li>
+          <li data-tool-card="query string parser convert a query string to json, or json back to a query string. query string parser">
+            <a href="query-string-parser/">
+              <strong>Query String Parser</strong>
+              <span>Convert a query string to JSON, or JSON back to a query string.</span>
+            </a>
+          </li>
+          <li data-tool-card="http response formatter split a raw http response into status, headers and a pretty body. http response formatter">
+            <a href="http-response-formatter/">
+              <strong>HTTP Response Formatter</strong>
+              <span>Split a raw HTTP response into status, headers and a pretty body.</span>
+            </a>
+          </li>
+        </ul>
+      </section>
+
+      <section class="tool-group" data-tool-group>
+        <h2 id="webhooks">Webhooks</h2>
+        <p class="group-blurb">Inspect payloads, generate signatures and test your endpoint.</p>
+        <ul class="card-list">
+          <li data-tool-card="webhook payload formatter pretty-print a webhook payload and summarise its event fields. webhook payload formatter">
+            <a href="webhook-payload-formatter/">
+              <strong>Webhook Payload Formatter</strong>
+              <span>Pretty-print a webhook payload and summarise its event fields.</span>
+            </a>
+          </li>
+          <li data-tool-card="webhook signature generator build a provider-style webhook signature header from a payload and secret. webhook signature generator">
+            <a href="webhook-signature-generator/">
+              <strong>Webhook Signature Generator</strong>
+              <span>Build a provider-style webhook signature header from a payload and secret.</span>
+            </a>
+          </li>
+          <li data-tool-card="hmac generator compute an hmac digest of any message with any supported hash. hmac generator">
+            <a href="hmac-generator/">
+              <strong>HMAC Generator</strong>
+              <span>Compute an HMAC digest of any message with any supported hash.</span>
+            </a>
+          </li>
+          <li data-tool-card="webhook tester send a signed test webhook from your browser and read the response. webhook tester">
+            <a href="webhook-tester/">
+              <strong>Webhook Tester</strong>
+              <span>Send a signed test webhook from your browser and read the response.</span>
+            </a>
+          </li>
+        </ul>
+      </section>
+
+      <section class="tool-group" data-tool-group>
+        <h2 id="utilities">Utilities</h2>
+        <p class="group-blurb">The small lookups that interrupt everything else.</p>
+        <ul class="card-list">
+          <li data-tool-card="uuid generator generate v4 or time-ordered v7 uuids in bulk. uuid generator">
+            <a href="uuid-generator/">
+              <strong>UUID Generator</strong>
+              <span>Generate v4 or time-ordered v7 UUIDs in bulk.</span>
+            </a>
+          </li>
+          <li data-tool-card="regex tester test a regular expression and inspect every match and capture group. regex tester">
+            <a href="regex-tester/">
+              <strong>Regex Tester</strong>
+              <span>Test a regular expression and inspect every match and capture group.</span>
+            </a>
+          </li>
+          <li data-tool-card="unix timestamp converter convert between unix timestamps, iso 8601 and human dates. unix timestamp converter">
+            <a href="timestamp-converter/">
+              <strong>Unix Timestamp Converter</strong>
+              <span>Convert between Unix timestamps, ISO 8601 and human dates.</span>
+            </a>
+          </li>
+        </ul>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+
+      <nav class="footer-links" aria-label="Footer">
+        <a href="../tools/">All tools</a>
+        <a href="../about/">About</a>
+        <a href="../contact/">Contact</a>
+        <a href="../privacy/">Privacy</a>
+        <a href="../terms/">Terms</a>
+      </nav>
+
+      <p class="footer-note">
+        Every tool on curl2code runs entirely in your browser. Commands, tokens and
+        payloads you paste are never uploaded to a server.
+      </p>
+
+      <p class="footer-copy">&copy; 2026 curl2code</p>
+
+    </div>
+  </footer>
+
+  <div id="toast" role="status" aria-live="polite"></div>
+
+  <script src="../js/site.js"></script>
+
+</body>
+</html>

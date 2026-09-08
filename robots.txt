@@ -1,0 +1,5 @@
+# curl2code
+User-agent: *
+Allow: /
+
+Sitemap: https://curl2code.xyz/sitemap.xml

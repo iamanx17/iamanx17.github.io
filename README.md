@@ -1,92 +1,111 @@
 # curl2code
 
-Free, browser-based developer tools for working with HTTP APIs. 26 tools across 35 pages:
-convert a cURL command into code in nine languages, format and compare JSON, decode a JWT,
-test a regular expression, explain a cron schedule.
+Free, browser-based developer tools for working with HTTP APIs. Static HTML, no
+framework, no build dependencies beyond Node for the page generator.
 
-Every tool runs in the browser. Nothing you paste is uploaded — the one exception is the
-webhook tester, whose whole purpose is to send a request.
-
-## Running it
-
-```sh
-npm install
-npm run dev      # http://localhost:3000
-```
-
-```sh
-npm run build    # production build
-npm run start    # serve it
-npm run lint     # type-check
-```
+Live at <https://curl2code.xyz>.
 
 ## Layout
 
 ```
-app/                     routes — one file per page
-  tools/[slug]/page.tsx  every tool page comes from here
-components/
-  ToolRunner.tsx         the only client component: form, output, copy, download
-  Output.tsx             draws the blocks a tool returns
-lib/
-  tools/                 one file per tool: metadata, inputs, run(), page content
-    types.ts             the Tool shape and the result helpers
-    index.ts             the registry
-  curl/                  the cURL parser and the nine code generators
-  site.ts                name, URL, navigation
-  seo.ts                 JSON-LD
+index.html            generated homepage
+tools/                generated — one directory per tool page
+about/ contact/ privacy/ terms/   generated
+404.html sitemap.xml robots.txt CNAME .nojekyll   generated
+
+assets/css/site.css   the whole stylesheet (hand-written, not generated)
+assets/img/           favicon, touch icon, Open Graph image
+js/                   the tools themselves (hand-written, not generated)
+build/                the page generator and all written page content
 ```
 
-## How a tool works
+Everything under `tools/` and the root HTML files is **generated**. Edit the
+content in `build/`, never the output.
 
-A tool is one object in `lib/tools/`. It carries its own metadata, its input fields, the
-function that produces output, and the written content for its page:
+## Build
 
-```ts
-export const myTool: Tool = {
-  slug: "my-tool",
-  name: "My Tool",
-  category: "Utilities",
-  summary: "One line for the card and the meta description.",
-  title: "My Tool — … | curl2code",
-  description: "The paragraph under the heading. Written for someone who has not used it.",
-  inputs: [{ key: "input", label: "Text", type: "textarea" }],
-  run: (values) => text(str(values, "input").toUpperCase()),
-  docs: [{ heading: "How to use it", html: "<p>…</p>" }],
-  faqs: [{ q: "…", a: "…" }],
-};
+```sh
+npm run build     # regenerate every page, sitemap.xml and robots.txt
+npm run serve     # http://localhost:8080
 ```
 
-Add it to the array in `lib/tools/index.ts` and the page, the directory listing, the sitemap
-and the related-tools block all follow. There is no separate registration step.
+`build/build.js` deletes and rewrites `tools/`. It never touches `js/` or
+`assets/`.
 
-`run()` returns data, never markup:
+## How a tool page works
 
-- `text(value, notes?)` — a block of code or plain output, with optional warnings
-- `blocks([...], copy?)` — headings, tables, lists and code, plus what the copy button takes
-- `empty(message)` — nothing to do yet, such as an empty input
+Each page is a plain HTML document that declares which tool it hosts:
 
-`Output.tsx` decides how each block is drawn, so no tool escapes anything and React handles
-it. Anything a tool throws is shown as an error message, which is why those messages are
-written for a person: what went wrong and what to do about it.
+```html
+<script>window.TOOL = {"id":"curl-to-code","preset":{"lang":"go"}};</script>
+<script src="../../js/app.js"></script>
+<script src="../../js/curl.js"></script>
+```
 
-Input types are `text`, `textarea`, `select` and `checkbox`. Set `manual: true` if the tool
-should only run when asked — the webhook tester uses it, because it sends a real request.
-Set `download` to a filename, or a function of the values, to get a download button.
+`js/app.js` holds the registry, form renderer and runner. Each module in `js/`
+registers its tools with `Tools.add({ ... })`. No tool ever makes a network
+request, with the single documented exception of the webhook tester.
 
-## Analytics
+## Adding a tool
 
-Off unless `NEXT_PUBLIC_GA_ID` is set. Events carry the tool's slug and nothing else:
-`tool_opened`, `copy_clicked`, `download_clicked`, `example_loaded`. No field contents are
-ever sent — see `lib/analytics.ts`.
+1. Register it in a module under `js/` (or add a new module):
 
-## Notes
+   ```js
+   Tools.add({
+     id: "my-tool",
+     cat: "Utilities",
+     name: "My Tool",
+     desc: "One line describing it.",
+     inputs: [{ key: "text", label: "Input", type: "textarea" }],
+     run(values) { return values.text.toUpperCase(); }
+   });
+   ```
 
-- `NEXT_PUBLIC_SITE_URL` sets canonical URLs and the sitemap. It defaults to the production
-  domain, so set it when running anywhere else.
-- Pages are prerendered at build time, so the site is static in practice even though it is
-  served by Node.
-- The tool registry is imported by the client component, so tool page content ships in the
-  page bundle. If that ever matters, move `docs` and `faqs` out of the tool objects into a
-  map the page imports on its own — nothing else needs to change.
-- If a chunk 404s locally, you rebuilt while `next start` was running. Restart it.
+   `run()` may return a string, `{ html }`, `{ code, notes }` or `{ note }`.
+
+2. Add an entry to `build/content-tools.js` with the slug, title, meta
+   description, H1, intro and the written sections that go under the tool. If
+   there is nothing worth writing, the tool does not need a page.
+
+3. `npm run build`.
+
+The sitemap, the tools directory, the related-tools blocks and the internal
+links all follow automatically.
+
+## Enabling Google Analytics 4
+
+Open `js/analytics.js` and set `MEASUREMENT_ID` to your `G-XXXXXXXXXX` property.
+While it is empty nothing is loaded and no requests are made.
+
+Events sent: `page_view` (automatic), `tool_opened`, `generate`,
+`copy_clicked`, `tool_error`. Parameters are limited to the tool id, its
+category and a sanitised error label — **never the content a user pastes**.
+Some runtime errors quote the input back (JSON.parse answers with a fragment of
+what you pasted), so `errorLabel()` in `js/app.js` strips every quoted span
+before the event is sent. If you add a tool whose errors embed user data in some
+other shape, extend that function.
+Advertising signals are off, IPs are anonymised, and the script is not loaded at
+all when the browser sends Do Not Track or Global Privacy Control.
+
+## Enabling ads later
+
+Every tool page already contains a slot between the tool and the written
+content:
+
+```html
+<!-- ad slot: below-tool -->
+<aside class="ad-slot" data-slot="below-tool" aria-hidden="true"></aside>
+```
+
+`.ad-slot` is `display: none` in `assets/css/site.css`. To turn ads on: remove
+that rule, drop the ad unit inside the `<aside>` in `build/render.js`, drop
+`aria-hidden`, and rebuild. Nothing above the tool should ever become an ad
+slot — the tool is the reason people are on the page.
+
+Update the advertising section of `build/content-pages.js` (the privacy policy)
+in the same change, before the ads go live.
+
+## Deploying
+
+The repository root *is* the site. Push to the branch GitHub Pages serves.
+`CNAME` and `.nojekyll` are generated by the build.

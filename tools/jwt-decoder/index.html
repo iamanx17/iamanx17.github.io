@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b0d12">
+  <title>JWT Decoder — Decode JSON Web Tokens Safely | curl2code</title>
+  <meta name="description" content="Decode a JWT header and payload in your browser. The token is never uploaded, so you can safely inspect production tokens. Claims are shown in full.">
+  <link rel="canonical" href="https://curl2code.xyz/tools/jwt-decoder/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="curl2code">
+  <meta property="og:title" content="JWT Decoder — Decode JSON Web Tokens Safely | curl2code">
+  <meta property="og:description" content="Decode a JWT header and payload in your browser. The token is never uploaded, so you can safely inspect production tokens. Claims are shown in full.">
+  <meta property="og:url" content="https://curl2code.xyz/tools/jwt-decoder/">
+  <meta property="og:image" content="https://curl2code.xyz/assets/img/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="JWT Decoder — Decode JSON Web Tokens Safely | curl2code">
+  <meta name="twitter:description" content="Decode a JWT header and payload in your browser. The token is never uploaded, so you can safely inspect production tokens. Claims are shown in full.">
+  <meta name="twitter:image" content="https://curl2code.xyz/assets/img/og.png">
+
+  <link rel="stylesheet" href="../../assets/css/site.css">
+  <link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../assets/img/icon-180.png">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"JWT decoder","url":"https://curl2code.xyz/tools/jwt-decoder/","applicationCategory":"DeveloperApplication","operatingSystem":"Any browser","description":"Decode a JWT header and payload in your browser. The token is never uploaded, so you can safely inspect production tokens. Claims are shown in full.","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://curl2code.xyz/"},{"@type":"ListItem","position":2,"name":"Tools","item":"https://curl2code.xyz/tools/"},{"@type":"ListItem","position":3,"name":"JWT Decoder","item":"https://curl2code.xyz/tools/jwt-decoder/"}]}</script>
+  <script src="../../js/analytics.js"></script>
+</head>
+<body class="tool-page">
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="wrap">
+
+      <a class="brand" href="../../">
+        <span class="brand-mark">c2</span>
+        <span class="brand-name">curl<span>2code</span></span>
+      </a>
+
+      <button id="navToggle" class="nav-toggle" aria-expanded="false" aria-controls="siteNav" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+
+      <nav id="siteNav" class="site-nav" aria-label="Main">
+        <a href="../../">Home</a>
+        <a href="../../tools/" aria-current="page">Tools</a>
+        <a href="../../tools/curl-to-code/">cURL → Code</a>
+        <a href="../../about/">About</a>
+      </nav>
+
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Breadcrumb">
+        <a href="../../">Home</a>
+        <span aria-hidden="true">/</span>
+        <a href="../">Tools</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">JWT Decoder</span>
+      </nav>
+      <header class="page-head">
+        <p class="eyebrow">Auth</p>
+        <h1>JWT decoder</h1>
+        <p class="lead">Paste a JSON Web Token to read its header and payload. Decoding happens in your browser — the token is never transmitted, which matters because a JWT is a live credential.</p>
+      </header>
+      <div class="tool-app">
+
+        <div class="grid">
+
+          <section class="panel">
+            <div class="panel-header">
+              <h2 class="panel-title">Input</h2>
+              <button id="exampleBtn" class="ghost" type="button" hidden>Load example</button>
+            </div>
+            <div id="input-fields"></div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-header">
+              <h2 class="panel-title" id="output-label">Output</h2>
+              <button id="copyBtn" class="ghost" type="button">Copy</button>
+            </div>
+            <div id="output"><div class="placeholder">Loading the tool…</div></div>
+          </section>
+
+        </div>
+
+        <div class="actions">
+          <button id="runBtn" class="primary" type="button">Run</button>
+          <button id="copyBtn2" type="button">Copy output</button>
+          <button id="clearBtn" type="button">Clear</button>
+          <span class="actions-note">Runs in your browser. <kbd>⌘</kbd>/<kbd>Ctrl</kbd> + <kbd>Enter</kbd> to run.</span>
+        </div>
+
+      </div>
+      <!-- ad slot: below-tool — see README before enabling -->
+      <aside class="ad-slot" data-slot="below-tool" aria-hidden="true"></aside>
+      <div class="prose">
+        <section>
+          <h2>What decoding does and does not prove</h2>
+<p>
+  A JWT is three Base64URL segments separated by dots: header, payload and
+  signature. The first two are <strong>encoded, not encrypted</strong>. Anyone
+  holding the token can read every claim in it, which is why a JWT must never
+  carry a password, a card number or anything else you would not print in a log.
+</p>
+<p>
+  Decoding tells you nothing about authenticity. Only verifying the signature with
+  the issuer's key does that, and it cannot be done here without the key. Use this
+  tool to read claims while debugging; verify in your application.
+</p>
+        </section>
+
+        <section>
+          <h2>Claims worth checking first</h2>
+<ul class="doc-list">
+  <li><code>exp</code> — expiry, as a Unix timestamp in <em>seconds</em>. The most common cause of an unexpected 401. Check it with the <a href="/tools/jwt-expiry-checker/">JWT expiry checker</a>.</li>
+  <li><code>iat</code> and <code>nbf</code> — issued-at and not-before. A clock skew of a few seconds between machines can make a fresh token invalid.</li>
+  <li><code>iss</code> and <code>aud</code> — issuer and audience. A token minted for a different audience is a frequent cause of a valid-looking token being rejected.</li>
+  <li><code>alg</code> in the header — if it says <code>none</code>, the token is unsigned and must be rejected.</li>
+</ul>
+        </section>
+      </div>
+      <section class="related">
+        <h2>Related tools</h2>
+        <ul class="card-list">
+        <li><a href="../jwt-expiry-checker/"><strong>JWT Expiry Checker</strong><span>See whether a JWT is expired, not yet valid, or still good.</span></a></li>
+        <li><a href="../base64-encoder-decoder/"><strong>Base64 Encoder / Decoder</strong><span>Encode or decode Base64 and Base64URL, Unicode-safe.</span></a></li>
+        <li><a href="../url-encoder-decoder/"><strong>URL Encoder / Decoder</strong><span>Percent-encode or decode text for use in URLs.</span></a></li>
+        <li><a href="../basic-auth-generator/"><strong>Basic Auth Generator</strong><span>Build or read back an HTTP Basic Authorization header.</span></a></li>
+        </ul>
+        <p class="related-all"><a href="../">Browse all 25 tools →</a></p>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+
+      <nav class="footer-links" aria-label="Footer">
+        <a href="../../tools/">All tools</a>
+        <a href="../../about/">About</a>
+        <a href="../../contact/">Contact</a>
+        <a href="../../privacy/">Privacy</a>
+        <a href="../../terms/">Terms</a>
+      </nav>
+
+      <p class="footer-note">
+        Every tool on curl2code runs entirely in your browser. Commands, tokens and
+        payloads you paste are never uploaded to a server.
+      </p>
+
+      <p class="footer-copy">&copy; 2026 curl2code</p>
+
+    </div>
+  </footer>
+
+  <div id="toast" role="status" aria-live="polite"></div>
+
+  <script>window.TOOL = {"id":"jwt-decoder"};</script>
+  <script src="../../js/site.js"></script>
+  <script src="../../js/app.js"></script>
+  <script src="../../js/auth.js"></script>
+</body>
+</html>
