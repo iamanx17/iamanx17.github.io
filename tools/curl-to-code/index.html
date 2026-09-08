@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b0d12">
+  <title>cURL to Code Converter — 9 Languages | curl2code</title>
+  <meta name="description" content="Paste a cURL command and get working code in JavaScript, Python, Go, Java, PHP, C#, Ruby or Node.js. Handles headers, auth, JSON and uploads. Free.">
+  <link rel="canonical" href="https://curl2code.xyz/tools/curl-to-code/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="curl2code">
+  <meta property="og:title" content="cURL to Code Converter — 9 Languages | curl2code">
+  <meta property="og:description" content="Paste a cURL command and get working code in JavaScript, Python, Go, Java, PHP, C#, Ruby or Node.js. Handles headers, auth, JSON and uploads. Free.">
+  <meta property="og:url" content="https://curl2code.xyz/tools/curl-to-code/">
+  <meta property="og:image" content="https://curl2code.xyz/assets/img/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="cURL to Code Converter — 9 Languages | curl2code">
+  <meta name="twitter:description" content="Paste a cURL command and get working code in JavaScript, Python, Go, Java, PHP, C#, Ruby or Node.js. Handles headers, auth, JSON and uploads. Free.">
+  <meta name="twitter:image" content="https://curl2code.xyz/assets/img/og.png">
+
+  <link rel="stylesheet" href="../../assets/css/site.css">
+  <link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../assets/img/icon-180.png">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"cURL to code converter","url":"https://curl2code.xyz/tools/curl-to-code/","applicationCategory":"DeveloperApplication","operatingSystem":"Any browser","description":"Paste a cURL command and get working code in JavaScript, Python, Go, Java, PHP, C#, Ruby or Node.js. Handles headers, auth, JSON and uploads. Free.","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://curl2code.xyz/"},{"@type":"ListItem","position":2,"name":"Tools","item":"https://curl2code.xyz/tools/"},{"@type":"ListItem","position":3,"name":"cURL → Code Converter","item":"https://curl2code.xyz/tools/curl-to-code/"}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is the cURL converter free?","acceptedAnswer":{"@type":"Answer","text":"Yes. Every tool on curl2code is free, has no account and no usage limit."}},{"@type":"Question","name":"Is it safe to paste a command containing an API key?","acceptedAnswer":{"@type":"Answer","text":"The converter runs entirely in your browser. The command is parsed by JavaScript on your machine and no part of it — URL, headers or body — is sent to a server. Even so, treat any generated snippet as a secret: it contains the same token you pasted, so do not commit it to a public repository."}},{"@type":"Question","name":"Which cURL flags are supported?","acceptedAnswer":{"@type":"Answer","text":"Method, URL, headers, cookies, user agent, referer, basic and bearer auth, all the -d/--data variants, --data-urlencode, --json, -G, multipart -F uploads, --compressed, -L and -k. Options with no code equivalent, such as --output or --proxy, are consumed and reported rather than silently dropped."}},{"@type":"Question","name":"Why is my body sent as a string instead of an object?","acceptedAnswer":{"@type":"Answer","text":"The converter builds a native object literal only when the body is valid JSON. If the JSON has a trailing comma, a single-quoted key or a shell variable in it, it cannot be parsed and is passed through as a raw string instead. Fix the JSON and the output becomes an object."}},{"@type":"Question","name":"Can I convert a command copied from Chrome DevTools?","acceptedAnswer":{"@type":"Answer","text":"Yes. Right-click a request in the Network tab, choose Copy → Copy as cURL, and paste it in. Browser copies include a long list of headers and cookies; delete the ones your script does not need before using the generated code."}},{"@type":"Question","name":"Does the generated code handle errors?","acceptedAnswer":{"@type":"Answer","text":"Every snippet checks the response status: fetch and Axios throw on a non-2xx status, Python calls raise_for_status(), Go and Ruby print the status line, and PHP raises on a transport failure. A default timeout is set wherever the client supports one."}}]}</script>
+  <script src="../../js/analytics.js"></script>
+</head>
+<body class="tool-page">
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="wrap">
+
+      <a class="brand" href="../../">
+        <span class="brand-mark">c2</span>
+        <span class="brand-name">curl<span>2code</span></span>
+      </a>
+
+      <button id="navToggle" class="nav-toggle" aria-expanded="false" aria-controls="siteNav" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+
+      <nav id="siteNav" class="site-nav" aria-label="Main">
+        <a href="../../">Home</a>
+        <a href="../../tools/" aria-current="page">Tools</a>
+        <a href="../../tools/curl-to-code/" aria-current="page">cURL → Code</a>
+        <a href="../../about/">About</a>
+      </nav>
+
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Breadcrumb">
+        <a href="../../">Home</a>
+        <span aria-hidden="true">/</span>
+        <a href="../">Tools</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">cURL → Code Converter</span>
+      </nav>
+      <header class="page-head">
+        <p class="eyebrow">cURL</p>
+        <h1>cURL to code converter</h1>
+        <p class="lead">Paste a cURL command and get the same request as runnable code in nine languages. Headers, query parameters, JSON and form bodies, basic and bearer auth and multipart uploads are all converted. Everything happens in your browser, so a command carrying a live token never leaves your machine.</p>
+      </header>
+      <nav class="chips" aria-label="Target languages">
+        <span class="chips-label">Language guides:</span>
+        <a class="chip" href="../curl-to-javascript/">JavaScript</a>
+        <a class="chip" href="../curl-to-python/">Python</a>
+        <a class="chip" href="../curl-to-nodejs/">Node.js</a>
+        <a class="chip" href="../curl-to-axios/">Axios</a>
+        <a class="chip" href="../curl-to-go/">Go</a>
+        <a class="chip" href="../curl-to-java/">Java</a>
+        <a class="chip" href="../curl-to-php/">PHP</a>
+        <a class="chip" href="../curl-to-csharp/">C#</a>
+        <a class="chip" href="../curl-to-ruby/">Ruby</a>
+      </nav>
+
+      <div class="tool-app">
+
+        <div class="grid">
+
+          <section class="panel">
+            <div class="panel-header">
+              <h2 class="panel-title">Input</h2>
+              <button id="exampleBtn" class="ghost" type="button" hidden>Load example</button>
+            </div>
+            <div id="input-fields"></div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-header">
+              <h2 class="panel-title" id="output-label">Output</h2>
+              <button id="copyBtn" class="ghost" type="button">Copy</button>
+            </div>
+            <div id="output"><div class="placeholder">Loading the tool…</div></div>
+          </section>
+
+        </div>
+
+        <div class="actions">
+          <button id="runBtn" class="primary" type="button">Run</button>
+          <button id="copyBtn2" type="button">Copy output</button>
+          <button id="clearBtn" type="button">Clear</button>
+          <span class="actions-note">Runs in your browser. <kbd>⌘</kbd>/<kbd>Ctrl</kbd> + <kbd>Enter</kbd> to run.</span>
+        </div>
+
+      </div>
+      <!-- ad slot: below-tool — see README before enabling -->
+      <aside class="ad-slot" data-slot="below-tool" aria-hidden="true"></aside>
+      <div class="prose">
+        <section>
+          <h2>What this tool does</h2>
+<p>
+  Paste a cURL command — typed by hand, copied from an API's documentation, or
+  taken from your browser's <strong>Copy as cURL</strong> menu — and get the same
+  request written as runnable code in the language you work in.
+</p>
+<p>
+  The converter parses the command the way a shell would: it handles quoting,
+  backslash line continuations, PowerShell backticks and Windows carets, then
+  reconstructs the request from the flags it finds. The result is a snippet you
+  can paste into a file and run, not a skeleton you have to finish.
+</p>
+        </section>
+
+        <section>
+          <h2>How to use it</h2>
+<ol class="steps">
+  <li>Pick your target language from the dropdown.</li>
+  <li>Paste the cURL command into the input box. Output appears as you type.</li>
+  <li>Read the warnings, if any — they list options that have no equivalent in code.</li>
+  <li>Press <strong>Copy</strong>, or use <kbd>Ctrl</kbd>/<kbd>⌘</kbd> + <kbd>Enter</kbd> to re-run.</li>
+</ol>
+<p>
+  Nothing is uploaded. The parser and every generator are plain JavaScript running
+  in your tab, which is why you can safely convert a command that carries a live
+  bearer token.
+</p>
+        </section>
+
+        <section>
+          <h2>Examples</h2>
+<h3>A JSON POST with a bearer token</h3>
+<pre><code>curl 'https://api.example.com/v1/users' \
+  -X POST \
+  -H 'Content-Type: application/json' \
+  -H 'Authorization: Bearer YOUR_TOKEN' \
+  -d '{"name":"Ada Lovelace","admin":false}'</code></pre>
+<p>
+  Because the body is valid JSON, the converter emits a real object literal —
+  <code>JSON.stringify({ name: "Ada Lovelace", admin: false })</code> in JavaScript,
+  a <code>dict</code> passed to <code>json=</code> in Python — rather than an
+  opaque string you would have to edit by hand.
+</p>
+
+<h3>A form post with basic auth</h3>
+<pre><code>curl -u admin:s3cret \
+  -d 'grant_type=client_credentials' \
+  -d 'scope=read write' \
+  https://api.example.com/oauth/token</code></pre>
+<p>
+  The two <code>-d</code> flags are joined with <code>&amp;</code> exactly as cURL
+  joins them, the pair is recognised as form-encoded, and
+  <code>-u</code> is converted into the matching
+  <code>Authorization: Basic</code> header with the credentials Base64-encoded.
+</p>
+
+<h3>A file upload</h3>
+<pre><code>curl -X POST https://api.example.com/v1/files \
+  -F 'file=@./report.pdf;type=application/pdf' \
+  -F 'visibility=private'</code></pre>
+<p>
+  Multipart uploads become a <code>FormData</code> object in JavaScript,
+  <code>files=</code> and <code>data=</code> arguments in Python, a
+  <code>multipart.Writer</code> in Go and a <code>CURLFile</code> in PHP. The
+  boundary is left to the HTTP client, which is why any
+  <code>Content-Type: multipart/form-data</code> header you pasted is dropped —
+  keeping it would produce a malformed request.
+</p>
+        </section>
+
+        <section>
+          <h2>Supported cURL options</h2>
+<table class="doc-table">
+  <thead><tr><th>Option</th><th>How it is converted</th></tr></thead>
+  <tbody>
+    <tr><td><code>-X</code>, <code>--request</code></td><td>Sets the HTTP method.</td></tr>
+    <tr><td><code>-H</code>, <code>--header</code></td><td>Added to the request headers, original casing preserved.</td></tr>
+    <tr><td><code>-d</code>, <code>--data</code>, <code>--data-raw</code>, <code>--data-binary</code>, <code>--data-ascii</code></td><td>Request body. Multiple flags are joined with <code>&amp;</code>. Implies <code>POST</code>.</td></tr>
+    <tr><td><code>--data-urlencode</code></td><td>Value is percent-encoded before being added to the body.</td></tr>
+    <tr><td><code>--json</code></td><td>Body plus <code>Content-Type</code> and <code>Accept: application/json</code>.</td></tr>
+    <tr><td><code>-G</code>, <code>--get</code></td><td>Moves the data onto the query string and keeps the method as <code>GET</code>.</td></tr>
+    <tr><td><code>-F</code>, <code>--form</code>, <code>--form-string</code></td><td>Multipart body. <code>@path</code> is treated as a file, <code>;type=</code> as its content type.</td></tr>
+    <tr><td><code>-u</code>, <code>--user</code></td><td>Encoded into an <code>Authorization: Basic</code> header.</td></tr>
+    <tr><td><code>--oauth2-bearer</code></td><td>Encoded into an <code>Authorization: Bearer</code> header.</td></tr>
+    <tr><td><code>-b</code>, <code>--cookie</code></td><td>Becomes a <code>Cookie</code> header when given inline.</td></tr>
+    <tr><td><code>-A</code>, <code>-e</code></td><td><code>User-Agent</code> and <code>Referer</code> headers.</td></tr>
+    <tr><td><code>-L</code>, <code>-k</code>, <code>--compressed</code></td><td>Mapped to redirect, TLS-verification and compression settings where the client exposes them.</td></tr>
+    <tr><td><code>-I</code>, <code>--head</code></td><td>Sets the method to <code>HEAD</code>.</td></tr>
+    <tr><td><code>-s</code>, <code>-v</code>, <code>-i</code>, <code>-f</code>, <code>-#</code>, <code>--http2</code>, …</td><td>Terminal-only flags. Accepted and ignored, including bundled forms such as <code>-sSL</code>.</td></tr>
+    <tr><td><code>-o</code>, <code>-x</code>, <code>--cacert</code>, <code>--retry</code>, …</td><td>Consumed with their value so they cannot be mistaken for the URL. Reported as a warning.</td></tr>
+  </tbody>
+</table>
+        </section>
+
+        <section>
+          <h2>Common errors and what they mean</h2>
+<dl class="doc-list">
+  <dt>“This does not start with curl”</dt>
+  <dd>Only the command itself belongs in the box. Remove a leading shell prompt, a pipe into <code>jq</code>, or the <code>&amp;&amp;</code> that joins it to another command.</dd>
+
+  <dt>“Unbalanced single quote”</dt>
+  <dd>The paste is truncated, usually because the command wrapped across lines in a chat window. Copy it again, including the closing quote.</dd>
+
+  <dt>“No URL found in the command”</dt>
+  <dd>The URL is missing, or it was consumed as the value of a flag. Put the URL first — <code>curl https://… -H '…'</code> — and it will always be found.</dd>
+
+  <dt>Body appears as a string, not an object</dt>
+  <dd>The body is not valid JSON. Shell variables such as <code>$TOKEN</code>, single-quoted keys and trailing commas all break parsing. The request is still correct; only the literal is less convenient.</dd>
+
+  <dt>A header you pasted is missing</dt>
+  <dd>Headers without a colon are dropped, and a <code>Content-Type</code> naming a multipart boundary is removed on purpose so the HTTP client can generate its own.</dd>
+</dl>
+        </section>
+
+        <section>
+          <h2>When you would use this</h2>
+<ul class="doc-list">
+  <li><strong>Turning API documentation into a client.</strong> Most API docs show a cURL example. This gets you from that example to working code without transcribing headers by hand.</li>
+  <li><strong>Reproducing a browser request.</strong> Copy a request as cURL from DevTools to see exactly which headers your front end sends, then port it to a backend script.</li>
+  <li><strong>Moving a request between languages.</strong> Convert once to cURL, then to whatever the receiving service is written in.</li>
+  <li><strong>Debugging an integration.</strong> If cURL works but your code does not, generating the code from the same command shows which header or body detail differs.</li>
+  <li><strong>Writing tests and runbooks.</strong> A support ticket with a cURL command becomes a reproducible test case in your own stack.</li>
+</ul>
+        </section>
+
+        <section class="faq">
+          <h2>Frequently asked questions</h2>
+          <div class="faq-item">
+            <h3>Is the cURL converter free?</h3>
+            <p>Yes. Every tool on curl2code is free, has no account and no usage limit.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Is it safe to paste a command containing an API key?</h3>
+            <p>The converter runs entirely in your browser. The command is parsed by JavaScript on your machine and no part of it — URL, headers or body — is sent to a server. Even so, treat any generated snippet as a secret: it contains the same token you pasted, so do not commit it to a public repository.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Which cURL flags are supported?</h3>
+            <p>Method, URL, headers, cookies, user agent, referer, basic and bearer auth, all the -d/--data variants, --data-urlencode, --json, -G, multipart -F uploads, --compressed, -L and -k. Options with no code equivalent, such as --output or --proxy, are consumed and reported rather than silently dropped.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Why is my body sent as a string instead of an object?</h3>
+            <p>The converter builds a native object literal only when the body is valid JSON. If the JSON has a trailing comma, a single-quoted key or a shell variable in it, it cannot be parsed and is passed through as a raw string instead. Fix the JSON and the output becomes an object.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Can I convert a command copied from Chrome DevTools?</h3>
+            <p>Yes. Right-click a request in the Network tab, choose Copy → Copy as cURL, and paste it in. Browser copies include a long list of headers and cookies; delete the ones your script does not need before using the generated code.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Does the generated code handle errors?</h3>
+            <p>Every snippet checks the response status: fetch and Axios throw on a non-2xx status, Python calls raise_for_status(), Go and Ruby print the status line, and PHP raises on a transport failure. A default timeout is set wherever the client supports one.</p>
+          </div>
+        </section>
+      </div>
+      <section class="related">
+        <h2>Related tools</h2>
+        <ul class="card-list">
+        <li><a href="../curl-to-javascript/"><strong>cURL → JavaScript</strong><span>Browser-ready fetch() with async/await and a status check.</span></a></li>
+        <li><a href="../curl-to-python/"><strong>cURL → Python</strong><span>Python 3 script using requests, with a timeout and raise_for_status().</span></a></li>
+        <li><a href="../curl-to-nodejs/"><strong>cURL → Node.js</strong><span>Node 18+ script using the built-in global fetch — no packages.</span></a></li>
+        <li><a href="../curl-to-axios/"><strong>cURL → Axios</strong><span>Axios request config for Node or the browser, with try/catch.</span></a></li>
+        </ul>
+        <p class="related-all"><a href="../">Browse all 25 tools →</a></p>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+
+      <nav class="footer-links" aria-label="Footer">
+        <a href="../../tools/">All tools</a>
+        <a href="../../about/">About</a>
+        <a href="../../contact/">Contact</a>
+        <a href="../../privacy/">Privacy</a>
+        <a href="../../terms/">Terms</a>
+      </nav>
+
+      <p class="footer-note">
+        Every tool on curl2code runs entirely in your browser. Commands, tokens and
+        payloads you paste are never uploaded to a server.
+      </p>
+
+      <p class="footer-copy">&copy; 2026 curl2code</p>
+
+    </div>
+  </footer>
+
+  <div id="toast" role="status" aria-live="polite"></div>
+
+  <script>window.TOOL = {"id":"curl-to-code","prefill":true};</script>
+  <script src="../../js/site.js"></script>
+  <script src="../../js/app.js"></script>
+  <script src="../../js/curl.js"></script>
+</body>
+</html>

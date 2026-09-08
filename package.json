@@ -1,0 +1,11 @@
+{
+  "name": "curl2code",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Free browser-based developer tools for working with HTTP APIs.",
+  "type": "module",
+  "scripts": {
+    "build": "node build/build.js",
+    "serve": "python3 -m http.server 8080"
+  }
+}

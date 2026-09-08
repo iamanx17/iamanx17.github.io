@@ -77,6 +77,7 @@ Tools.add({
 
     if (!v.url.trim()) return { note: "Enter a URL." };
 
+<<<<<<< HEAD
     const data = {
       url: v.url.trim(),
       method: v.method,
@@ -101,6 +102,29 @@ Tools.add({
     }
 
     return parts.join(" \\\n");
+=======
+    const headers = parseHeaderLines(v.headers);
+    const body = v.body.trim() ? v.body.trim() : null;
+
+    const parts = ["curl -X " + v.method + " " + shellQuote(v.url.trim())];
+
+    for (const [key, value] of Object.entries(headers)) {
+      parts.push("  -H " + shellQuote(key + ": " + value));
+    }
+
+    if (body !== null) {
+      parts.push("  --data-raw " + shellQuote(body));
+    }
+
+    const curl = parts.join(" \\\n");
+
+    /* the code formats reuse the cURL parser so both paths stay in sync */
+    if (v.format === "fetch")  return genFetch(parseCurl(curl));
+    if (v.format === "axios")  return genAxios(parseCurl(curl));
+    if (v.format === "python") return genPython(parseCurl(curl));
+
+    return curl;
+>>>>>>> f3ae358 (Rebuild curl2code as a static multi-page site)
   }
 });
 
