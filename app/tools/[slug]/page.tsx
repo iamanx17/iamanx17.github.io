@@ -1,0 +1,97 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { CurlLanguages } from "@/components/CurlLanguages";
+import { ToolCard } from "@/components/ToolCard";
+import { ToolRunner } from "@/components/ToolRunner";
+import { TOOLS, getTool, relatedTools } from "@/lib/tools";
+import { faqSchema, softwareSchema } from "@/lib/seo";
+
+type Props = { params: Promise<{ slug: string }> };
+
+export function generateStaticParams() {
+  return TOOLS.map((tool) => ({ slug: tool.slug }));
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const tool = getTool((await params).slug);
+  if (!tool) return {};
+
+  return {
+    title: tool.title,
+    description: tool.summary,
+    alternates: { canonical: `/tools/${tool.slug}` },
+    openGraph: { title: tool.title, description: tool.summary, url: `/tools/${tool.slug}` },
+  };
+}
+
+export default async function ToolPage({ params }: Props) {
+  const tool = getTool((await params).slug);
+  if (!tool) notFound();
+
+  const related = relatedTools(tool);
+
+  return (
+    <div className="mx-auto max-w-6xl px-4 py-8">
+      <nav className="mb-6 flex gap-2 text-xs text-faint">
+        <Link href="/" className="hover:text-fg">Home</Link>
+        <span>/</span>
+        <Link href="/tools" className="hover:text-fg">Tools</Link>
+        <span>/</span>
+        <span className="text-dim">{tool.name}</span>
+      </nav>
+
+      <header className="mb-6 max-w-3xl">
+        <p className="text-xs font-medium tracking-wide text-accent uppercase">{tool.category}</p>
+        <h1 className="mt-1 text-2xl font-bold sm:text-3xl">{tool.name}</h1>
+        <p className="mt-3 text-dim">{tool.description}</p>
+      </header>
+
+      {tool.category === "cURL" && <CurlLanguages slug={tool.slug} />}
+
+      <ToolRunner slug={tool.slug} />
+
+      {tool.docs?.length ? (
+        <div className="prose mt-12 max-w-3xl">
+          {tool.docs.map((doc) => (
+            <section key={doc.heading}>
+              <h2>{doc.heading}</h2>
+              <div dangerouslySetInnerHTML={{ __html: doc.html }} />
+            </section>
+          ))}
+        </div>
+      ) : null}
+
+      {tool.faqs?.length ? (
+        <div className="prose mt-10 max-w-3xl">
+          <h2>Frequently asked questions</h2>
+          {tool.faqs.map((faq) => (
+            <div key={faq.q}>
+              <h3>{faq.q}</h3>
+              <p>{faq.a}</p>
+            </div>
+          ))}
+        </div>
+      ) : null}
+
+      <section className="mt-12">
+        <h2 className="mb-4 text-lg font-semibold">Related tools</h2>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {related.map((other) => (
+            <ToolCard key={other.slug} tool={other} />
+          ))}
+        </div>
+      </section>
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify([
+            softwareSchema(tool),
+            ...(tool.faqs?.length ? [faqSchema(tool.faqs)] : []),
+          ]),
+        }}
+      />
+    </div>
+  );
+}

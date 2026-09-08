@@ -1,0 +1,181 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #0b0d12;
+  --color-panel: #14171f;
+  --color-panel-2: #171b24;
+  --color-line: #232833;
+  --color-line-soft: #1c212a;
+
+  --color-fg: #e8eaf0;
+  --color-dim: #98a1b2;
+  --color-faint: #6b7484;
+
+  --color-accent: #5b8cff;
+  --color-accent-2: #a26bff;
+  --color-accent-soft: rgba(91, 140, 255, 0.12);
+  --color-ok: #46d38a;
+  --color-warn: #f5b93b;
+  --color-err: #ff6b6b;
+
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Selects keep their own caret so they look the same in dark mode everywhere. */
+select {
+  appearance: none;
+  padding-right: 2rem;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--color-faint) 50%),
+    linear-gradient(135deg, var(--color-faint) 50%, transparent 50%);
+  background-position: right 1rem center, right 0.65rem center;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+}
+
+/* Panels ease in on load, and the output flashes when it changes, so you can
+   see that something happened without reading it. */
+.rise {
+  animation: rise 0.38s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.flash {
+  animation: flash 0.34s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+@keyframes flash {
+  from {
+    opacity: 0.35;
+    transform: translateY(4px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Written page content. Tool docs are authored as HTML strings, so the
+   elements inside them are styled here rather than with utility classes. */
+.prose {
+  color: var(--color-dim);
+  line-height: 1.7;
+}
+
+.prose h2 {
+  color: var(--color-fg);
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 2rem 0 0.75rem;
+}
+
+.prose h3 {
+  color: var(--color-fg);
+  font-weight: 600;
+  margin: 1.5rem 0 0.5rem;
+}
+
+.prose p {
+  margin: 0 0 0.875rem;
+}
+
+.prose a {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.prose strong {
+  color: var(--color-fg);
+  font-weight: 600;
+}
+
+.prose code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  background: var(--color-panel-2);
+  border: 1px solid var(--color-line-soft);
+  border-radius: 4px;
+  padding: 0.1em 0.35em;
+  color: var(--color-fg);
+}
+
+.prose pre {
+  background: var(--color-panel);
+  border: 1px solid var(--color-line);
+  border-radius: 8px;
+  padding: 0.875rem 1rem;
+  overflow-x: auto;
+  margin: 0 0 0.875rem;
+}
+
+.prose pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.8rem;
+  line-height: 1.6;
+}
+
+.prose .list,
+.prose ul,
+.prose ol {
+  margin: 0 0 0.875rem;
+  padding-left: 1.25rem;
+  list-style: disc;
+}
+
+.prose ol,
+.prose .list-decimal {
+  list-style: decimal;
+}
+
+.prose li {
+  margin: 0 0 0.4rem;
+}
+
+.prose .doc-table {
+  display: block;
+  overflow-x: auto;
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  margin: 0 0 0.875rem;
+}
+
+.prose .doc-table th,
+.prose .doc-table td {
+  text-align: left;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--color-line-soft);
+  vertical-align: top;
+}
+
+.prose .doc-table th {
+  color: var(--color-fg);
+  white-space: nowrap;
+}
