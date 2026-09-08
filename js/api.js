@@ -75,7 +75,7 @@ Tools.add({
   ],
   run(v) {
 
-    if (!v.url.trim()) return "Enter a URL.";
+    if (!v.url.trim()) return { note: "Enter a URL." };
 
     const data = {
       url: v.url.trim(),
@@ -252,7 +252,7 @@ Tools.add({
   ],
   run(v) {
 
-    if (!v.raw.trim()) return "Paste a raw header block.";
+    if (!v.raw.trim()) return { note: "Paste a raw header block." };
 
     const lines = v.raw.split(/\r?\n/).filter(l => l.trim());
 
@@ -265,7 +265,7 @@ Tools.add({
     const headers = parseHeaderLines(lines.join("\n"));
 
     if (!Object.keys(headers).length) {
-      return "No headers found.";
+      return { note: "No headers found." };
     }
 
     const rows = Object.entries(headers).map(([k, val]) =>
@@ -298,7 +298,7 @@ Tools.add({
   ],
   run(v) {
 
-    if (!v.url.trim()) return "Paste a URL.";
+    if (!v.url.trim()) return { note: "Paste a URL." };
 
     let url;
 
@@ -377,7 +377,7 @@ Tools.add({
 
     const text = v.input.trim();
 
-    if (!text) return "Paste a query string.";
+    if (!text) return { note: "Paste a query string." };
 
     if (v.mode === "toQuery") {
 
@@ -434,7 +434,7 @@ Tools.add({
 
     const raw = v.raw.replace(/\r\n/g, "\n");
 
-    if (!raw.trim()) return "Paste a raw HTTP response.";
+    if (!raw.trim()) return { note: "Paste a raw HTTP response." };
 
     const split = raw.indexOf("\n\n");
 

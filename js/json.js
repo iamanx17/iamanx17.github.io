@@ -72,6 +72,8 @@ Tools.add({
   ],
   run(v) {
 
+    if (!v.input.trim()) return { note: "Paste some JSON to format." };
+
     let data = parseJson(v.input);
 
     if (v.sort) data = sortDeep(data);
@@ -103,7 +105,7 @@ Tools.add({
 
     const text = v.input;
 
-    if (!text.trim()) return "Paste some JSON.";
+    if (!text.trim()) return { note: "Paste some JSON." };
 
     try {
 
@@ -229,7 +231,7 @@ Tools.add({
   run(v) {
 
     if (!v.left.trim() || !v.right.trim()) {
-      return "Paste JSON into both fields.";
+      return { note: "Paste JSON into both fields." };
     }
 
     const left = parseJson(v.left, "left JSON");
@@ -388,6 +390,8 @@ Tools.add({
   ],
   run(v) {
 
+    if (!v.input.trim()) return { note: "Paste a JSON sample to generate types." };
+
     const data = parseJson(v.input);
     const defs = [];
 
@@ -492,6 +496,8 @@ Tools.add({
   ],
   run(v) {
 
+    if (!v.input.trim()) return { note: "Paste a JSON sample to generate a schema." };
+
     const data = parseJson(v.input);
     const name = pascalCase(v.name.trim() || "Root");
 
@@ -575,6 +581,8 @@ Tools.add({
     { key: "name", label: "Root model name", type: "text", value: "Root", placeholder: "Root" }
   ],
   run(v) {
+
+    if (!v.input.trim()) return { note: "Paste a JSON sample to generate models." };
 
     const data = parseJson(v.input);
     const defs = [];

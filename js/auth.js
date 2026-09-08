@@ -119,7 +119,7 @@ Tools.add({
   ],
   run(v) {
 
-    if (!v.token.trim()) return "Paste a JWT.";
+    if (!v.token.trim()) return { note: "Paste a JWT." };
 
     const { header, payload, signature } = splitJwt(v.token);
 
@@ -172,7 +172,7 @@ Tools.add({
   ],
   run(v) {
 
-    if (!v.token.trim()) return "Paste a JWT.";
+    if (!v.token.trim()) return { note: "Paste a JWT." };
 
     const { payload } = splitJwt(v.token);
 
@@ -244,7 +244,7 @@ Tools.add({
   ],
   run(v) {
 
-    if (!v.input) return "Enter some text.";
+    if (!v.input) return { note: "Enter some text." };
 
     if (v.mode === "decode") {
 
@@ -295,7 +295,7 @@ Tools.add({
   ],
   run(v) {
 
-    if (!v.input) return "Enter some text.";
+    if (!v.input) return { note: "Enter some text." };
 
     try {
 
@@ -359,7 +359,7 @@ Tools.add({
       };
     }
 
-    if (!v.user && !v.pass) return "Enter a username and password.";
+    if (!v.user && !v.pass) return { note: "Enter a username and password." };
 
     const encoded = base64Encode(v.user + ":" + v.pass);
 

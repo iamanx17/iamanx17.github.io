@@ -75,7 +75,7 @@ Tools.add({
 
     const text = v.input.trim();
 
-    if (!text) return "Paste a webhook payload.";
+    if (!text) return { note: "Paste a webhook payload." };
 
     let data;
 
@@ -174,8 +174,8 @@ Tools.add({
   ],
   async run(v) {
 
-    if (!v.payload.trim()) return "Paste the payload to sign.";
-    if (!v.secret) return "Enter the signing secret.";
+    if (!v.payload.trim()) return { note: "Paste the payload to sign." };
+    if (!v.secret) return { note: "Enter the signing secret." };
 
     const payload = v.payload;
 
@@ -242,8 +242,8 @@ Tools.add({
   ],
   async run(v) {
 
-    if (!v.message) return "Enter a message.";
-    if (!v.secret) return "Enter a secret key.";
+    if (!v.message) return { note: "Enter a message." };
+    if (!v.secret) return { note: "Enter a secret key." };
 
     const hex = await hmacDigest(v.algorithm, v.secret, v.message, "hex");
     const base64 = await hmacDigest(v.algorithm, v.secret, v.message, "base64");
@@ -299,7 +299,7 @@ Tools.add({
   async run(v) {
 
     if (!v.url.trim()) {
-      return "Enter a target URL, fill in the payload, then press Run to send.";
+      return { note: "Enter a target URL, fill in the payload, then press Run to send." };
     }
 
     const headers = parseHeaderLines(v.headers);

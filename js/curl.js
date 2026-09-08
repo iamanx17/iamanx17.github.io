@@ -563,15 +563,15 @@ Register one tool per target language
 */
 
 const CURL_TARGETS = [
-  ["curl-javascript", "cURL → JavaScript", "Browser fetch() with async/await.", genFetch],
-  ["curl-python",     "cURL → Python",     "Python requests library.",          genPython],
-  ["curl-axios",      "cURL → Axios",      "Axios request config.",             genAxios],
-  ["curl-go",         "cURL → Go",         "Go net/http client.",               genGo],
-  ["curl-java",       "cURL → Java",       "Java 11+ java.net.http client.",    genJava],
-  ["curl-php",        "cURL → PHP",        "PHP cURL extension.",               genPhp],
-  ["curl-csharp",     "cURL → C#",         "C# HttpClient.",                    genCsharp],
-  ["curl-ruby",       "cURL → Ruby",       "Ruby Net::HTTP.",                   genRuby],
-  ["curl-node",       "cURL → Node.js",    "Node 18+ global fetch.",            genNode]
+  ["curl-javascript", "cURL → JavaScript", "Browser-ready fetch() call with async/await and JSON parsing.", genFetch],
+  ["curl-python",     "cURL → Python",     "Python 3 script using the requests library.",                     genPython],
+  ["curl-axios",      "cURL → Axios",      "Axios request config for Node or the browser.",                   genAxios],
+  ["curl-go",         "cURL → Go",         "Idiomatic Go using net/http with error handling.",                 genGo],
+  ["curl-java",       "cURL → Java",       "Java 11+ java.net.http HttpClient, no dependencies.",              genJava],
+  ["curl-php",        "cURL → PHP",        "PHP using the built-in cURL extension.",                           genPhp],
+  ["curl-csharp",     "cURL → C#",         "C# HttpClient with an async Main method.",                         genCsharp],
+  ["curl-ruby",       "cURL → Ruby",       "Ruby standard library Net::HTTP, TLS aware.",                      genRuby],
+  ["curl-node",       "cURL → Node.js",    "Node 18+ using global fetch — no packages required.",              genNode]
 ];
 
 
@@ -595,7 +595,7 @@ for (const [id, name, desc, generator] of CURL_TARGETS) {
     ],
     run(v) {
 
-      if (!v.curl.trim()) return "Paste a cURL command first.";
+      if (!v.curl.trim()) return { note: "Paste a cURL command first." };
 
       return generator(parseCurl(v.curl));
     }

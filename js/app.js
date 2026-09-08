@@ -1,14 +1,14 @@
 /*
----------------------------------------------------
-Tiny tool registry + renderer
----------------------------------------------------
+============================================================
+curl2code — tool registry, form renderer and router
+============================================================
 
-Every tool is registered with:
+Every tool registers itself:
 
   Tools.add({
     id, cat, name, desc,
     inputs: [ { key, label, type, ... } ],
-    run(values) -> string | { html: "..." } | Promise<...>
+    run(values) -> string | { html } | Promise<...>
   })
 
 Input types: textarea, text, password, select, checkbox
@@ -23,7 +23,7 @@ const Tools = {
   },
 
   get(id) {
-    return this.list.find(t => t.id === id);
+    return this.list.find(tool => tool.id === id);
   }
 };
 
@@ -32,32 +32,36 @@ const CATEGORY_ORDER = ["cURL", "API", "JSON", "Auth", "Webhooks"];
 
 
 /*
----------------------------------------------------
+------------------------------------------------------------
 Sidebar
----------------------------------------------------
+------------------------------------------------------------
 */
 
 function buildSidebar(filter) {
 
   const nav = document.getElementById("nav");
-
-  nav.innerHTML = "";
-
   const query = (filter || "").toLowerCase().trim();
 
-  for (const cat of CATEGORY_ORDER) {
+  const fragment = document.createDocumentFragment();
 
-    const tools = Tools.list.filter(t =>
-      t.cat === cat &&
-      (!query || t.name.toLowerCase().includes(query))
+  let shown = 0;
+
+  for (const category of CATEGORY_ORDER) {
+
+    const tools = Tools.list.filter(tool =>
+      tool.cat === category && (
+        !query ||
+        tool.name.toLowerCase().includes(query) ||
+        (tool.desc || "").toLowerCase().includes(query)
+      )
     );
 
     if (!tools.length) continue;
 
     const title = document.createElement("div");
     title.className = "cat-title";
-    title.textContent = cat;
-    nav.appendChild(title);
+    title.textContent = category;
+    fragment.appendChild(title);
 
     for (const tool of tools) {
 
@@ -68,9 +72,20 @@ function buildSidebar(filter) {
       item.textContent = tool.name;
       item.href = "#" + tool.id;
 
-      nav.appendChild(item);
+      fragment.appendChild(item);
+      shown++;
     }
   }
+
+  if (!shown) {
+
+    const empty = document.createElement("div");
+    empty.className = "nav-empty";
+    empty.textContent = "No tools match that search.";
+    fragment.appendChild(empty);
+  }
+
+  nav.replaceChildren(fragment);
 
   markActive();
 }
@@ -80,129 +95,145 @@ function markActive() {
 
   const current = location.hash.slice(1);
 
-  document.querySelectorAll(".nav-item").forEach(el => {
-    el.classList.toggle("active", el.dataset.id === current);
+  document.querySelectorAll(".nav-item").forEach(item => {
+    item.classList.toggle("active", item.dataset.id === current);
   });
 }
 
 
 /*
----------------------------------------------------
-Render a tool
----------------------------------------------------
+------------------------------------------------------------
+Rendering a tool
+------------------------------------------------------------
 */
 
 let currentTool = null;
+
+
+function buildField(input) {
+
+  const field = document.createElement("div");
+  field.className = "field";
+
+  let el;
+
+  if (input.type === "textarea") {
+
+    el = document.createElement("textarea");
+    el.placeholder = input.placeholder || "";
+    el.spellcheck = false;
+
+    if (input.tall) el.classList.add("tall");
+
+  } else if (input.type === "select") {
+
+    el = document.createElement("select");
+
+    for (const option of input.options) {
+
+      const opt = document.createElement("option");
+
+      opt.value = typeof option === "string" ? option : option.value;
+      opt.textContent = typeof option === "string" ? option : option.label;
+
+      el.appendChild(opt);
+    }
+
+  } else if (input.type === "checkbox") {
+
+    el = document.createElement("input");
+    el.type = "checkbox";
+
+  } else {
+
+    el = document.createElement("input");
+    el.type = input.type === "password" ? "password" : "text";
+    el.placeholder = input.placeholder || "";
+    el.spellcheck = false;
+    el.autocomplete = "off";
+  }
+
+  el.id = "in-" + input.key;
+  el.dataset.key = input.key;
+
+  if (input.value !== undefined) {
+
+    if (input.type === "checkbox") {
+      el.checked = !!input.value;
+    } else {
+      el.value = input.value;
+    }
+  }
+
+  if (input.type === "checkbox") {
+
+    const wrap = document.createElement("label");
+
+    wrap.className = "check";
+    wrap.appendChild(el);
+    wrap.appendChild(document.createTextNode(input.label));
+
+    field.appendChild(wrap);
+
+  } else {
+
+    const label = document.createElement("label");
+    label.textContent = input.label;
+    label.htmlFor = el.id;
+
+    field.appendChild(label);
+    field.appendChild(el);
+  }
+
+  if (input.hint) {
+
+    const hint = document.createElement("div");
+    hint.className = "hint";
+    hint.textContent = input.hint;
+
+    field.appendChild(hint);
+  }
+
+  el.addEventListener("input", scheduleRun);
+  el.addEventListener("change", scheduleRun);
+
+  return field;
+}
 
 
 function renderTool(tool) {
 
   currentTool = tool;
 
+  document.title = tool.name + " — curl2code";
+
   document.getElementById("tool-title").textContent = tool.name;
   document.getElementById("tool-desc").textContent = tool.desc || "";
+  document.getElementById("tool-cat").textContent = tool.cat;
+  document.getElementById("output-label").textContent = tool.outputLabel || "Output";
 
-  const inputPanel = document.getElementById("input-fields");
-  const outLabel = document.getElementById("output-label");
+  /* replay the entrance animation on every tool switch */
+  document.querySelectorAll(".tool-head, .panel, .actions").forEach(el => {
+    el.style.animation = "none";
+    void el.offsetWidth;
+    el.style.animation = "";
+  });
 
-  inputPanel.innerHTML = "";
-  outLabel.textContent = tool.outputLabel || "Output";
-
-  setOutput("");
+  const fields = document.createDocumentFragment();
 
   for (const input of tool.inputs) {
-
-    const field = document.createElement("div");
-    field.className = "field";
-
-    if (input.type !== "checkbox") {
-      const label = document.createElement("label");
-      label.textContent = input.label;
-      field.appendChild(label);
-    }
-
-    let el;
-
-    if (input.type === "textarea") {
-
-      el = document.createElement("textarea");
-      el.placeholder = input.placeholder || "";
-      if (input.tall) el.classList.add("tall");
-
-    } else if (input.type === "select") {
-
-      el = document.createElement("select");
-
-      for (const option of input.options) {
-
-        const opt = document.createElement("option");
-
-        opt.value = typeof option === "string" ? option : option.value;
-        opt.textContent = typeof option === "string" ? option : option.label;
-
-        el.appendChild(opt);
-      }
-
-    } else if (input.type === "checkbox") {
-
-      const wrap = document.createElement("label");
-      wrap.style.textTransform = "none";
-      wrap.style.letterSpacing = "0";
-      wrap.style.fontSize = "13px";
-      wrap.style.color = "#e6e6e6";
-      wrap.style.display = "flex";
-      wrap.style.gap = "8px";
-      wrap.style.alignItems = "center";
-      wrap.style.margin = "0";
-
-      el = document.createElement("input");
-      el.type = "checkbox";
-
-      wrap.appendChild(el);
-      wrap.appendChild(document.createTextNode(input.label));
-
-      field.appendChild(wrap);
-
-    } else {
-
-      el = document.createElement("input");
-      el.type = input.type === "password" ? "password" : "text";
-      el.placeholder = input.placeholder || "";
-    }
-
-    el.id = "in-" + input.key;
-    el.dataset.key = input.key;
-
-    if (input.value !== undefined) {
-
-      if (input.type === "checkbox") {
-        el.checked = !!input.value;
-      } else {
-        el.value = input.value;
-      }
-    }
-
-    if (input.type !== "checkbox") {
-      field.appendChild(el);
-    }
-
-    if (input.hint) {
-      const hint = document.createElement("div");
-      hint.className = "hint";
-      hint.textContent = input.hint;
-      field.appendChild(hint);
-    }
-
-    el.addEventListener("input", run);
-    el.addEventListener("change", run);
-
-    inputPanel.appendChild(field);
+    fields.appendChild(buildField(input));
   }
 
-  document.getElementById("exampleBtn").style.display =
-    tool.example ? "" : "none";
+  document.getElementById("input-fields").replaceChildren(fields);
 
-  if (tool.autoRun !== false) run();
+  document.getElementById("exampleBtn").hidden = !tool.example;
+
+  if (tool.autoRun === false) {
+    showPlaceholder("Fill in the fields, then press Run.");
+  } else {
+    run();
+  }
 }
 
 
@@ -221,20 +252,79 @@ function readValues() {
 }
 
 
+/*
+------------------------------------------------------------
+Output
+------------------------------------------------------------
+*/
+
+function flashOutput(box) {
+
+  box.classList.remove("flash");
+  void box.offsetWidth;
+  box.classList.add("flash");
+}
+
+
+function showPlaceholder(message) {
+
+  const box = document.getElementById("output");
+
+  const div = document.createElement("div");
+  div.className = "placeholder";
+  div.textContent = message;
+
+  box.replaceChildren(div);
+}
+
+
 function setOutput(result) {
 
   const box = document.getElementById("output");
 
+  if (result && typeof result === "object" && result.note !== undefined) {
+
+    showPlaceholder(result.note);
+    flashOutput(box);
+
+    return;
+  }
+
   if (result && typeof result === "object" && result.html !== undefined) {
 
-    box.innerHTML = '<div class="out-html"></div>';
-    box.firstChild.innerHTML = result.html;
+    const wrap = document.createElement("div");
+    wrap.className = "out-html";
+    wrap.innerHTML = result.html;
+
+    box.replaceChildren(wrap);
 
   } else {
 
-    box.innerHTML = "<pre></pre>";
-    box.firstChild.textContent = result || "";
+    const pre = document.createElement("pre");
+    pre.textContent = result || "";
+
+    box.replaceChildren(pre);
   }
+
+  flashOutput(box);
+}
+
+
+/*
+------------------------------------------------------------
+Running
+------------------------------------------------------------
+*/
+
+let runTimer = null;
+let runToken = 0;
+
+
+function scheduleRun() {
+
+  clearTimeout(runTimer);
+
+  runTimer = setTimeout(run, 120);
 }
 
 
@@ -242,49 +332,56 @@ async function run() {
 
   if (!currentTool) return;
 
+  const token = ++runToken;
+
   try {
 
     const result = await currentTool.run(readValues());
+
+    /* a newer run started while this one was awaiting */
+    if (token !== runToken) return;
 
     setOutput(result);
 
   } catch (error) {
 
+    if (token !== runToken) return;
+
     setOutput({
-      html: '<span class="error">Error: ' + escapeHtml(error.message) + "</span>"
+      html: '<h3 class="error">Error</h3><p>' + escapeHtml(error.message) + "</p>"
     });
   }
 }
 
 
 /*
----------------------------------------------------
+------------------------------------------------------------
 Routing
----------------------------------------------------
+------------------------------------------------------------
 */
 
 function route() {
 
   const id = location.hash.slice(1);
-
   const tool = Tools.get(id) || Tools.list[0];
 
   if (!tool) return;
 
-  if (!location.hash) {
-    location.hash = tool.id;
+  if (id !== tool.id) {
+    location.replace("#" + tool.id);
     return;
   }
 
   renderTool(tool);
   markActive();
+  closeSidebar();
 }
 
 
 /*
----------------------------------------------------
-Shared helpers
----------------------------------------------------
+------------------------------------------------------------
+Shared helpers used by every tool module
+------------------------------------------------------------
 */
 
 function escapeHtml(value) {
@@ -312,9 +409,53 @@ function parseJson(text, what) {
 
 
 /*
----------------------------------------------------
+------------------------------------------------------------
+Chrome: toast, sidebar, shortcuts
+------------------------------------------------------------
+*/
+
+let toastTimer = null;
+
+
+function toast(message) {
+
+  const el = document.getElementById("toast");
+
+  el.textContent = message;
+  el.classList.add("show");
+
+  clearTimeout(toastTimer);
+
+  toastTimer = setTimeout(() => el.classList.remove("show"), 1700);
+}
+
+
+function closeSidebar() {
+
+  document.getElementById("sidebar").classList.remove("open");
+  document.getElementById("scrim").classList.remove("show");
+}
+
+
+async function copyOutput() {
+
+  const text = document.getElementById("output").innerText.trim();
+
+  if (!text) return toast("Nothing to copy yet");
+
+  try {
+    await navigator.clipboard.writeText(text);
+    toast("Copied to clipboard");
+  } catch {
+    toast("Clipboard blocked by the browser");
+  }
+}
+
+
+/*
+------------------------------------------------------------
 Boot
----------------------------------------------------
+------------------------------------------------------------
 */
 
 window.addEventListener("hashchange", route);
@@ -324,8 +465,24 @@ window.addEventListener("DOMContentLoaded", () => {
   buildSidebar("");
   route();
 
-  document.getElementById("search").addEventListener("input", e => {
-    buildSidebar(e.target.value);
+  const search = document.getElementById("search");
+
+  search.addEventListener("input", event => buildSidebar(event.target.value));
+
+  search.addEventListener("keydown", event => {
+
+    if (event.key === "Escape") {
+      search.value = "";
+      buildSidebar("");
+      search.blur();
+    }
+
+    if (event.key === "Enter") {
+
+      const first = document.querySelector(".nav-item");
+
+      if (first) location.hash = first.dataset.id;
+    }
   });
 
   document.getElementById("runBtn").addEventListener("click", run);
@@ -337,6 +494,7 @@ window.addEventListener("DOMContentLoaded", () => {
     for (const [key, value] of Object.entries(currentTool.example)) {
 
       const el = document.getElementById("in-" + key);
+
       if (!el) continue;
 
       if (el.type === "checkbox") {
@@ -347,28 +505,45 @@ window.addEventListener("DOMContentLoaded", () => {
     }
 
     run();
+    toast("Example loaded");
   });
 
-  document.getElementById("copyBtn").addEventListener("click", async () => {
-
-    const text = document.getElementById("output").textContent;
-
-    if (!text) return;
-
-    await navigator.clipboard.writeText(text);
-
-    const button = document.getElementById("copyBtn");
-
-    button.textContent = "Copied!";
-
-    setTimeout(() => { button.textContent = "Copy Output"; }, 1500);
-  });
+  document.getElementById("copyBtn").addEventListener("click", copyOutput);
+  document.getElementById("copyBtn2").addEventListener("click", copyOutput);
 
   document.getElementById("clearBtn").addEventListener("click", () => {
 
-    document.querySelectorAll("#input-fields textarea, #input-fields input[type=text], #input-fields input[type=password]")
+    document
+      .querySelectorAll("#input-fields textarea, #input-fields input[type=text], #input-fields input[type=password]")
       .forEach(el => { el.value = ""; });
 
     run();
+  });
+
+  /* mobile drawer */
+
+  document.getElementById("menuBtn").addEventListener("click", () => {
+    document.getElementById("sidebar").classList.toggle("open");
+    document.getElementById("scrim").classList.toggle("show");
+  });
+
+  document.getElementById("scrim").addEventListener("click", closeSidebar);
+
+  /* shortcuts */
+
+  document.addEventListener("keydown", event => {
+
+    const typing = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName);
+
+    if (event.key === "/" && !typing) {
+      event.preventDefault();
+      search.focus();
+      search.select();
+    }
+
+    if (event.key === "Enter" && (event.metaKey || event.ctrlKey)) {
+      event.preventDefault();
+      run();
+    }
   });
 });
